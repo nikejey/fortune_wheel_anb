@@ -193,8 +193,19 @@ body {
     ctx.fillStyle = "#d6b27e"; // светлый текст
     ctx.shadowColor = "#5c2b2b"; // тень текста
     ctx.shadowBlur = 8;
-    ctx.font = "15px 'Arsenal SC', sans-serif";
-    ctx.fillText(prizes[i], radius - 150, 5);
+    
+    // Размещаем текст в трех позициях с разным размером
+    const textPositions = [
+      { radius: radius - 250, fontSize: 10 },
+      { radius: radius - 200, fontSize: 12 },
+      { radius: radius - 150, fontSize: 15 }
+    ];
+    
+    textPositions.forEach(pos => {
+      ctx.font = `${pos.fontSize}px 'Arsenal SC', sans-serif`;
+      ctx.fillText(prizes[i], pos.radius, 5);
+    });
+    
     ctx.restore();
   }
 }
