@@ -153,11 +153,11 @@ body {
 
     const canvas = document.getElementById("wheel");
     const ctx = canvas.getContext("2d");
-    canvas.width = 600;
-    canvas.height = 600;
+    canvas.width = 720;
+    canvas.height = 720;
 
-    const center = { x: 300, y: 300 };
-    const radius = 300;
+    const center = { x: 360, y: 360 };
+    const radius = 360;
     const segmentAngle = 2 * Math.PI / prizes.length;
 
     function drawWheel() {
@@ -194,9 +194,9 @@ body {
     ctx.shadowBlur = 8;
     
     // Вычисляем размер шрифта в зависимости от расстояния от центра
-    const distanceFromCenter = radius - 150; // Расстояние от центра до текста
-    const fontSize = 10 + (distanceFromCenter / 50); // Размер шрифта увеличивается с расстоянием
-    ctx.font = `${fontSize}px 'Arsenal SC', sans-serif`;
+    const distanceFromCenter = radius - 180; // Увеличиваем расстояние для большего размера
+    const fontSize = 12 + (distanceFromCenter / 40); // Увеличиваем базовый размер и коэффициент
+    ctx.font = `bold ${fontSize}px 'Arsenal SC', sans-serif`; // Добавляем bold
     ctx.fillText(prizes[i], distanceFromCenter, 5);
     
     ctx.restore();
