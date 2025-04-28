@@ -194,17 +194,11 @@ body {
     ctx.shadowColor = "#5c2b2b"; // тень текста
     ctx.shadowBlur = 8;
     
-    // Размещаем текст в трех позициях с разным размером
-    const textPositions = [
-      { radius: radius - 250, fontSize: 10 },
-      { radius: radius - 200, fontSize: 12 },
-      { radius: radius - 150, fontSize: 15 }
-    ];
-    
-    textPositions.forEach(pos => {
-      ctx.font = `${pos.fontSize}px 'Arsenal SC', sans-serif`;
-      ctx.fillText(prizes[i], pos.radius, 5);
-    });
+    // Вычисляем размер шрифта в зависимости от расстояния от центра
+    const distanceFromCenter = radius - 150; // Расстояние от центра до текста
+    const fontSize = 10 + (distanceFromCenter / 50); // Размер шрифта увеличивается с расстоянием
+    ctx.font = `${fontSize}px 'Arsenal SC', sans-serif`;
+    ctx.fillText(prizes[i], distanceFromCenter, 5);
     
     ctx.restore();
   }
