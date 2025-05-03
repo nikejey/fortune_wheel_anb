@@ -28,12 +28,16 @@ body {
   justify-content: center;
   gap: 50px;
   position: relative;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .wheel-wrapper {
   position: relative;
   width: 600px;
   height: 600px;
+  margin: 0 auto;
 }
 
 .wheel-container {
@@ -75,14 +79,16 @@ body {
   justify-content: center;
   align-items: center;
   gap: 20px;
-  background: rgba(48, 31, 31, 0.8); /* Тёмный фон */
+  background: rgba(48, 31, 31, 0.8);
   padding: 20px;
   border: 2px solid #634f4fb9;
   border-radius: 10px;
   width: 280px;
   box-shadow: 0 0 15px #292323;
-  backdrop-filter: blur(5px); /* Размытие фона */
-  color: rgb(172, 175, 172); 
+  backdrop-filter: blur(5px);
+  color: rgb(172, 175, 172);
+  position: absolute;
+  right: 0;
 }
 
 #spin {
@@ -141,7 +147,7 @@ body {
   color: rgb(172, 175, 172);
   overflow-y: auto;
   position: absolute;
-  left: -300px;
+  left: 0;
   transition: height 0.3s ease;
 }
 
