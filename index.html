@@ -27,6 +27,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 50px;
+  position: relative;
 }
 
 .wheel-wrapper {
@@ -138,6 +139,8 @@ body {
   backdrop-filter: blur(5px);
   color: rgb(172, 175, 172);
   overflow-y: auto;
+  position: absolute;
+  left: 0;
 }
 
 .history-title {
@@ -177,10 +180,37 @@ body {
 .clear-history:hover {
   background-color: #312222c2;
 }
+
+.classnames-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: rgba(48, 31, 31, 0.8);
+  padding: 20px;
+  border: 2px solid #634f4fb9;
+  border-radius: 10px;
+  width: 280px;
+  box-shadow: 0 0 15px #292323;
+  backdrop-filter: blur(5px);
+  color: rgb(172, 175, 172);
+  position: absolute;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+}
   </style>
 </head>
 <body>
   <div class="main">
+    <div class="history-panel">
+      <div class="history-title">История выигрышей</div>
+      <ul class="history-list">
+        <!-- История выигрышей будет добавляться здесь -->
+      </ul>
+      <button class="clear-history">Очистить историю</button>
+    </div>
     <div class="wheel-wrapper">
       <div class="wheel-container">
         <canvas id="wheel"></canvas>
@@ -193,15 +223,8 @@ body {
       <button id="spin">Крутить</button>
       <div id="result">Ваш выигрыш появится здесь</div>
     </div>
-    <div class="side-panel">
+    <div class="classnames-panel">
       <a href="https://docs.google.com/document/d/1_2DCAa3PAqP2XjQwCYtNs0SxiVLuPNgCzAG-VLJcbQY/edit?tab=t.0#heading=h.rll3cbyzyxml" target="_blank" class="classnames-link">Список класснеймов</a>
-    </div>
-    <div class="history-panel">
-      <div class="history-title">История выигрышей</div>
-      <ul class="history-list">
-        <!-- История выигрышей будет добавляться здесь -->
-      </ul>
-      <button class="clear-history">Очистить историю</button>
     </div>
   </div>
 
