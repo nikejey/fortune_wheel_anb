@@ -134,13 +134,15 @@ body {
   border: 2px solid #634f4fb9;
   border-radius: 10px;
   width: 280px;
-  height: 600px;
+  min-height: 200px;
+  max-height: 600px;
   box-shadow: 0 0 15px #292323;
   backdrop-filter: blur(5px);
   color: rgb(172, 175, 172);
   overflow-y: auto;
   position: absolute;
-  left: 0;
+  left: -300px;
+  transition: height 0.3s ease;
 }
 
 .history-title {
@@ -155,12 +157,27 @@ body {
   padding: 0;
   margin: 0;
   width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .history-item {
   padding: 10px;
   border-bottom: 1px solid #634f4fb9;
   font-size: 16px;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .clear-history {
@@ -175,6 +192,9 @@ body {
   font-family: "Arsenal SC", system-ui;
   text-transform: uppercase;
   margin-top: auto;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: 0.2s;
 }
 
 .clear-history:hover {
