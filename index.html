@@ -64,6 +64,18 @@ body {
   height: 100px;
   z-index: 1000;
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7));
+  transition: transform 0.1s ease;
+}
+
+.arrow.shake {
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateY(-50%); }
+  25% { transform: translateY(-55%); }
+  50% { transform: translateY(-45%); }
+  75% { transform: translateY(-55%); }
 }
 
 .arrow img {
@@ -72,7 +84,7 @@ body {
   object-fit: contain;
 }
 
-/* Стиль панели справа - терминал КПК */
+/* Стиль панели справа */
 .side-panel {
   display: flex;
   flex-direction: column;
@@ -113,6 +125,13 @@ body {
   text-shadow: 0 0 5px #4e2f2fbb;
   font-family: "Arsenal SC", system-ui;
   text-align: center;
+  transition: all 0.3s ease;
+}
+
+#result.highlight {
+  color: #d6b27e;
+  text-shadow: 0 0 10px #d6b27e;
+  transform: scale(1.1);
 }
 
 .classnames-link {
@@ -296,7 +315,7 @@ body {
     ctx.moveTo(center.x, center.y);
     ctx.arc(center.x, center.y, radius, startAngle, endAngle);
     
-    // Новый градиент на каждый сектор
+    // новая града на каждый сектор
     const gradient = ctx.createLinearGradient(
       center.x, center.y, 
       center.x + Math.cos(startAngle) * radius, 
@@ -320,10 +339,10 @@ body {
     ctx.shadowColor = "#5c2b2b"; // тень текста
     ctx.shadowBlur = 8;
     
-    // Вычисляем размер шрифта в зависимости от расстояния от центра
-    const distanceFromCenter = radius - 180; // Увеличиваем расстояние для большего размера
-    const fontSize = 12 + (distanceFromCenter / 40); // Увеличиваем базовый размер и коэффициент
-    ctx.font = `bold ${fontSize}px 'Arsenal SC', sans-serif`; // Добавляем bold
+    // вычисляхаю размер шрифта в зависимости от расстояния от центра
+    const distanceFromCenter = radius - 180; // увеличиваю расстояние для большего размера
+    const fontSize = 12 + (distanceFromCenter / 40); // увеличиваю базовый размер и коэффициент
+    ctx.font = `bold ${fontSize}px 'Arsenal SC', sans-serif`; // добавляю болт хыы пенис
     ctx.fillText(prizes[i], distanceFromCenter, 5);
     
     ctx.restore();
@@ -362,10 +381,25 @@ body {
       currentAngle = timesSpinned * 360 * spinsCount + 360 / 21 * randomSegment;
       canvas.style.transform = `rotate(${-currentAngle}deg)`;
 
+      // добавляю анимацию дрожания стрелки
+      const arrow = document.querySelector('.arrow');
+      setTimeout(() => {
+        arrow.classList.add('shake');
+        setTimeout(() => {
+          arrow.classList.remove('shake');
+        }, 500);
+      }, 5000);
+
       setTimeout(() => {
         const prize = prizes[randomSegment - 1];
         resultDiv.textContent = `Поздравляю! Ваш выигрыш: ${prize}`;
+        resultDiv.classList.add('highlight');
         addToHistory(prize);
+        
+        // убираю подсветку через 2 секунды
+        setTimeout(() => {
+          resultDiv.classList.remove('highlight');
+        }, 2000);
       }, 5100);
     });
   </script>
