@@ -53,11 +53,12 @@ body {
 .arrow {
   position: absolute;
   top: 50%;
-  right: -40px;
+  right: -50px;
   transform: translateY(-50%);
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   z-index: 1000;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7));
 }
 
 .arrow img {
@@ -106,6 +107,76 @@ body {
   font-family: "Arsenal SC", system-ui;
   text-align: center;
 }
+
+.classnames-link {
+  color: #c0c0c0;
+  text-decoration: none;
+  font-size: 20px;
+  text-transform: uppercase;
+  font-family: "Arsenal SC", system-ui;
+  transition: color 0.3s ease;
+  text-shadow: 0 0 5px #4e2f2fbb;
+}
+
+.classnames-link:hover {
+  color: #d6b27e;
+}
+
+.history-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  background: rgba(48, 31, 31, 0.8);
+  padding: 20px;
+  border: 2px solid #634f4fb9;
+  border-radius: 10px;
+  width: 280px;
+  height: 600px;
+  box-shadow: 0 0 15px #292323;
+  backdrop-filter: blur(5px);
+  color: rgb(172, 175, 172);
+  overflow-y: auto;
+}
+
+.history-title {
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px #4e2f2fbb;
+}
+
+.history-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.history-item {
+  padding: 10px;
+  border-bottom: 1px solid #634f4fb9;
+  font-size: 16px;
+}
+
+.clear-history {
+  padding: 10px 20px;
+  background-color: #302222;
+  border: 2px solid #7c5e5e;
+  color: #c0c0c0;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: "Arsenal SC", system-ui;
+  text-transform: uppercase;
+  margin-top: auto;
+}
+
+.clear-history:hover {
+  background-color: #312222c2;
+}
   </style>
 </head>
 <body>
@@ -121,9 +192,16 @@ body {
     <div class="side-panel">
       <button id="spin">Крутить</button>
       <div id="result">Ваш выигрыш появится здесь</div>
-
-
-      
+    </div>
+    <div class="side-panel">
+      <a href="https://docs.google.com/document/d/1_2DCAa3PAqP2XjQwCYtNs0SxiVLuPNgCzAG-VLJcbQY/edit?tab=t.0#heading=h.rll3cbyzyxml" target="_blank" class="classnames-link">Список класснеймов</a>
+    </div>
+    <div class="history-panel">
+      <div class="history-title">История выигрышей</div>
+      <ul class="history-list">
+        <!-- История выигрышей будет добавляться здесь -->
+      </ul>
+      <button class="clear-history">Очистить историю</button>
     </div>
   </div>
 
@@ -207,10 +285,23 @@ body {
 
     const spinButton = document.getElementById("spin");
     const resultDiv = document.getElementById("result");
+    const historyList = document.querySelector('.history-list');
+    const clearHistoryButton = document.querySelector('.clear-history');
 
     const angle = document.getElementById('angle');
     let currentAngle = 0;
     let timesSpinned = 0; 
+
+    function addToHistory(prize) {
+      const historyItem = document.createElement('li');
+      historyItem.className = 'history-item';
+      historyItem.textContent = `${historyList.children.length + 1}. ${prize}`;
+      historyList.appendChild(historyItem);
+    }
+
+    clearHistoryButton.addEventListener('click', () => {
+      historyList.innerHTML = '';
+    });
 
     spinButton.addEventListener("click", () => {
       timesSpinned += 1;
@@ -223,7 +314,9 @@ body {
       canvas.style.transform = `rotate(${-currentAngle}deg)`;
 
       setTimeout(() => {
-        resultDiv.textContent = `Поздравляю! Ваш выигрыш: ${prizes[randomSegment - 1]}`;
+        const prize = prizes[randomSegment - 1];
+        resultDiv.textContent = `Поздравляю! Ваш выигрыш: ${prize}`;
+        addToHistory(prize);
       }, 5100);
     });
   </script>
