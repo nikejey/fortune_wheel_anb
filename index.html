@@ -64,27 +64,33 @@ body {
   height: 100px;
   z-index: 1000;
   filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.7));
-  transition: transform 0.1s ease;
-}
-
-.arrow.shake {
-  animation: shake 0.5s ease;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateY(-50%); }
-  25% { transform: translateY(-55%); }
-  50% { transform: translateY(-45%); }
-  75% { transform: translateY(-55%); }
 }
 
 .arrow img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transform-origin: left center;
+  transition: transform 0.1s ease;
 }
 
-/* Стиль панели справа */
+.arrow.shake img {
+  animation: arrowShake 0.5s ease;
+}
+
+@keyframes arrowShake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+}
+
+.winning-sector {
+  filter: brightness(1.2) drop-shadow(0 0 10px #d6b27e);
+  transition: filter 0.3s ease;
+}
+
+/* Стиль панели справа - терминал КПК */
 .side-panel {
   display: flex;
   flex-direction: column;
@@ -307,47 +313,65 @@ body {
     const segmentAngle = 2 * Math.PI / prizes.length;
 
     function drawWheel() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < prizes.length; i++) {
-    const startAngle = i * segmentAngle;
-    const endAngle = startAngle + segmentAngle;
-    ctx.beginPath();
-    ctx.moveTo(center.x, center.y);
-    ctx.arc(center.x, center.y, radius, startAngle, endAngle);
-    
-    // новая града на каждый сектор
-    const gradient = ctx.createLinearGradient(
-      center.x, center.y, 
-      center.x + Math.cos(startAngle) * radius, 
-      center.y + Math.sin(startAngle) * radius
-    );
-    if (i % 2 === 0) {
-      gradient.addColorStop(0, "#8b4c39"); // красно-коричневый
-      gradient.addColorStop(1, "#c49e8b"); // пастельно-бежевый
-    } else {
-      gradient.addColorStop(0, "#6b2f24"); // темно-коричневый
-      gradient.addColorStop(1, "#a37b6e"); // мягкий кофейный
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < prizes.length; i++) {
+        const startAngle = i * segmentAngle;
+        const endAngle = startAngle + segmentAngle;
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y);
+        ctx.arc(center.x, center.y, radius, startAngle, endAngle);
+        
+        // Новый градиент на каждый сектор
+        const gradient = ctx.createLinearGradient(
+          center.x, center.y, 
+          center.x + Math.cos(startAngle) * radius, 
+          center.y + Math.sin(startAngle) * radius
+        );
+        if (i % 2 === 0) {
+          gradient.addColorStop(0, "#8b4c39");
+          gradient.addColorStop(1, "#c49e8b");
+        } else {
+          gradient.addColorStop(0, "#6b2f24");
+          gradient.addColorStop(1, "#a37b6e");
+        }
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        ctx.stroke();
+        ctx.save();
+        ctx.translate(center.x, center.y);
+        ctx.rotate(startAngle + segmentAngle / 2);
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#d6b27e";
+        ctx.shadowColor = "#5c2b2b";
+        ctx.shadowBlur = 8;
+        
+        const distanceFromCenter = radius - 180;
+        const fontSize = 12 + (distanceFromCenter / 40);
+        ctx.font = `bold ${fontSize}px 'Arsenal SC', sans-serif`;
+        ctx.fillText(prizes[i], distanceFromCenter, 5);
+        
+        ctx.restore();
+      }
     }
-    ctx.fillStyle = gradient;
-    ctx.fill();
-    ctx.stroke();
-    ctx.save();
-    ctx.translate(center.x, center.y);
-    ctx.rotate(startAngle + segmentAngle / 2);
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#d6b27e"; // светлый текст
-    ctx.shadowColor = "#5c2b2b"; // тень текста
-    ctx.shadowBlur = 8;
-    
-    // вычисляхаю размер шрифта в зависимости от расстояния от центра
-    const distanceFromCenter = radius - 180; // увеличиваю расстояние для большего размера
-    const fontSize = 12 + (distanceFromCenter / 40); // увеличиваю базовый размер и коэффициент
-    ctx.font = `bold ${fontSize}px 'Arsenal SC', sans-serif`; // добавляю болт хыы пенис
-    ctx.fillText(prizes[i], distanceFromCenter, 5);
-    
-    ctx.restore();
-  }
-}
+
+    let currentWinningSector = null;
+
+    function highlightWinningSector(index) {
+      if (currentWinningSector !== null) {
+        currentWinningSector.classList.remove('winning-sector');
+      }
+      
+      const sectors = document.querySelectorAll('.wheel-container canvas');
+      if (sectors[index]) {
+        sectors[index].classList.add('winning-sector');
+        currentWinningSector = sectors[index];
+        
+        setTimeout(() => {
+          sectors[index].classList.remove('winning-sector');
+          currentWinningSector = null;
+        }, 2000);
+      }
+    }
 
     drawWheel();
 
@@ -381,7 +405,6 @@ body {
       currentAngle = timesSpinned * 360 * spinsCount + 360 / 21 * randomSegment;
       canvas.style.transform = `rotate(${-currentAngle}deg)`;
 
-      // добавляю анимацию дрожания стрелки
       const arrow = document.querySelector('.arrow');
       setTimeout(() => {
         arrow.classList.add('shake');
@@ -395,8 +418,8 @@ body {
         resultDiv.textContent = `Поздравляю! Ваш выигрыш: ${prize}`;
         resultDiv.classList.add('highlight');
         addToHistory(prize);
+        highlightWinningSector(randomSegment - 1);
         
-        // убираю подсветку через 2 секунды
         setTimeout(() => {
           resultDiv.classList.remove('highlight');
         }, 2000);
