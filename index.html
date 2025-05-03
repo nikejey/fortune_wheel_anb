@@ -321,7 +321,6 @@ body {
         ctx.moveTo(center.x, center.y);
         ctx.arc(center.x, center.y, radius, startAngle, endAngle);
         
-        // Новый градиент на каждый сектор
         const gradient = ctx.createLinearGradient(
           center.x, center.y, 
           center.x + Math.cos(startAngle) * radius, 
@@ -341,9 +340,19 @@ body {
         ctx.translate(center.x, center.y);
         ctx.rotate(startAngle + segmentAngle / 2);
         ctx.textAlign = "center";
-        ctx.fillStyle = "#d6b27e";
-        ctx.shadowColor = "#5c2b2b";
-        ctx.shadowBlur = 8;
+        
+        // Определяем, является ли текущий сектор выигрышным
+        const isWinningSector = i === currentWinningIndex;
+        
+        if (isWinningSector) {
+          ctx.fillStyle = "#ffd700"; // Золотой цвет для выигрышного текста
+          ctx.shadowColor = "#ffd700";
+          ctx.shadowBlur = 15;
+        } else {
+          ctx.fillStyle = "#d6b27e";
+          ctx.shadowColor = "#5c2b2b";
+          ctx.shadowBlur = 8;
+        }
         
         const distanceFromCenter = radius - 180;
         const fontSize = 12 + (distanceFromCenter / 40);
@@ -354,23 +363,16 @@ body {
       }
     }
 
-    let currentWinningSector = null;
+    let currentWinningIndex = null;
 
     function highlightWinningSector(index) {
-      if (currentWinningSector !== null) {
-        currentWinningSector.classList.remove('winning-sector');
-      }
+      currentWinningIndex = index;
+      drawWheel(); // Перерисовываем колесо с подсветкой выигрышного сектора
       
-      const sectors = document.querySelectorAll('.wheel-container canvas');
-      if (sectors[index]) {
-        sectors[index].classList.add('winning-sector');
-        currentWinningSector = sectors[index];
-        
-        setTimeout(() => {
-          sectors[index].classList.remove('winning-sector');
-          currentWinningSector = null;
-        }, 2000);
-      }
+      setTimeout(() => {
+        currentWinningIndex = null;
+        drawWheel(); // Возвращаем обычное состояние колеса
+      }, 2000);
     }
 
     drawWheel();
